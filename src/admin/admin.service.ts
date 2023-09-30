@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PostDTO } from 'src/post/post.dto';
 import { PostService } from 'src/post/post.service';
+import { UserDTO } from 'src/user/user.dto';
 import { UserService } from 'src/user/user.service';
 
 @Injectable()
@@ -28,5 +29,25 @@ export class AdminService {
 
   async deletePost(id: string): Promise<string> {
     return await this.postService.delete(id);
+  }
+
+  async getAllUsers(): Promise<Array<UserDTO>> {
+    return await this.userService.findAll();
+  }
+
+  async getUserById(id: string): Promise<UserDTO> {
+    return await this.userService.findOne(id);
+  }
+
+  async createUser(data: any): Promise<UserDTO> {
+    return await this.userService.create(data);
+  }
+
+  async updateUser(id: string, data: any): Promise<string> {
+    return await this.userService.update(id, data);
+  }
+
+  async deleteUser(id: string): Promise<string> {
+    return await this.userService.delete(id);
   }
 }
