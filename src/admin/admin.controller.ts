@@ -144,4 +144,67 @@ export class AdminController {
   }
 
   // #endregion
+
+  // #region User
+
+  @Get('users/:idUser')
+  @ApiParam({
+    name: 'idUser',
+    description: 'Id of user',
+  })
+  async getUser(@Param('idUser') idUser: string): Promise<ResponseInterface> {
+    return {
+      status: 200,
+      metadata: await this.adminService.getUserById(idUser),
+    };
+  }
+
+  @Get('users')
+  async getAllUsers(): Promise<ResponseInterface> {
+    return {
+      status: 200,
+      metadata: await this.adminService.getAllUsers(),
+    };
+  }
+
+  @Post('users/create')
+  @ApiBody({ type: PostCreateDTO })
+  async createUser(@Body() data: PostCreateDTO): Promise<ResponseInterface> {
+    return {
+      status: 200,
+      metadata: await this.adminService.createUser(data),
+    };
+  }
+
+  @Put('users/update/:idUser')
+  @ApiParam({
+    name: 'idUser',
+    description: 'Id of user',
+  })
+  @ApiBody({ type: PostCreateDTO })
+  async updateUser(
+    @Param('idUser') idUser: string,
+    @Body() data: PostCreateDTO,
+  ): Promise<ResponseInterface> {
+    return {
+      status: 200,
+      metadata: await this.adminService.updateUser(idUser, data),
+    };
+  }
+
+  @Delete('users/delete/:idUser')
+  @ApiParam({
+    name: 'idUser',
+    description: 'Id of user',
+  })
+  async deleteUser(
+    @Param('idUser') idUser: string,
+  ): Promise<ResponseInterface> {
+    return {
+      status: 200,
+      metadata: await this.adminService.deleteUser(idUser),
+    };
+  }
+
+  // #endregion
 }
