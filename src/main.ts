@@ -4,7 +4,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 
-async function bootstrap() {
+async function bootstrap(port: number) {
   const app = await NestFactory.create(AppModule);
   app.use(helmet());
   app.enableCors({
@@ -14,8 +14,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .addBearerAuth()
-    .addServer('http://localhost:3000')
-    .addServer('http://localhost:3001')
+    .addServer('http://localhost:' + port)
     .setTitle('Shop APIS')
     .setDescription('The API description')
     .setVersion('1.0')
@@ -29,6 +28,9 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(3000);
+  await app.listen(port, '0.0.0.0', () => {
+    console.log(`Server is running on port ${port}`);
+  });
 }
-bootstrap();
+bootstrap(4000);
+// bootstrap(4001);

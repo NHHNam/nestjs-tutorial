@@ -14,6 +14,7 @@ import { AuthGuard } from '../auth/auth.guard';
 import { RolesGuard } from 'src/auth/role/roles.guard';
 import { Auth } from 'src/auth/auth.decorator';
 import { Role } from 'src/enums/role.enum';
+import { ResponseInterface } from 'src/cores/response.interface';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -39,17 +40,20 @@ export class UserController {
     description: 'List of cats',
     type: UserDTO,
   })
-  // @Auth(Role.Admin)
-  // @UseGuards(AuthGuard)
-  async create(@Body() data: UserDTO): Promise<any> {
+  @Auth(Role.Admin) // bao gom check token va check role
+  @UseGuards(AuthGuard) // chi check token
+  async create(@Body() data: UserDTO): Promise<ResponseInterface> {
     return {
       status: 200,
-      metada: await this.userSerice.create(data),
+      metadata: await this.userSerice.create(data),
     };
   }
 
   @Get('posts/:id')
-  async getPostsByUserId(@Param('id') id: string): Promise<any> {
-    return await this.userSerice.getPotsByUserId(id);
+  async getPostsByUserId(@Param('id') id: string): Promise<ResponseInterface> {
+    return {
+      status: 200,
+      metadata: await this.userSerice.getPotsByUserId(id),
+    };
   }
 }

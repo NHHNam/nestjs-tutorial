@@ -12,9 +12,10 @@ import {
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
-import { PostCreateDTO, PostDTO } from 'src/post/post.dto';
+import { PostCreateDTO } from 'src/post/post.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { saveFile } from 'src/utils/file';
+import { ResponseInterface } from 'src/cores/response.interface';
 
 @ApiTags('admin')
 @Controller('admin')
@@ -23,12 +24,27 @@ export class AdminController {
 
   // #region Post
 
-  @Get('posts')
-  async getAllPosts(): Promise<Array<PostDTO>> {
-    return await this.adminService.getAllPosts();
+  @Get('posts/:idPost')
+  @ApiParam({
+    name: 'idPost',
+    description: 'Id of post',
+  })
+  async getPost(@Param('idPost') idPost: string): Promise<ResponseInterface> {
+    return {
+      status: 200,
+      metadata: await this.adminService.getPostById(idPost),
+    };
   }
 
-  @Post(':idUser')
+  @Get('posts')
+  async getAllPosts(): Promise<ResponseInterface> {
+    return {
+      status: 200,
+      metadata: await this.adminService.getAllPosts(),
+    };
+  }
+
+  @Post('posts/create/:idUser')
   @ApiParam({
     name: 'idUser',
     description: 'Id of user',
@@ -40,7 +56,7 @@ export class AdminController {
     @Param('idUser') idUser: string,
     @Body() data: PostCreateDTO,
     @UploadedFile() file,
-  ): Promise<any> {
+  ): Promise<ResponseInterface> {
     const fileName = `${Date.now()}-${file.originalname}`;
     const filePath = `${fileName}`;
     const type = file.mimetype.split('/')[1];
@@ -69,7 +85,7 @@ export class AdminController {
     };
   }
 
-  @Put(':idPost')
+  @Put('posts/update/:idPost')
   @ApiParam({
     name: 'idPost',
     description: 'Id of post',
@@ -81,7 +97,7 @@ export class AdminController {
     @Param('idPost') idPost: string,
     @Body() data: PostCreateDTO,
     @UploadedFile() file,
-  ): Promise<any> {
+  ): Promise<ResponseInterface> {
     if (file) {
       const fileName = `${Date.now()}-${file.originalname}`;
       const filePath = `${fileName}`;
@@ -117,10 +133,15 @@ export class AdminController {
     name: 'idPost',
     description: 'Id of post',
   })
-  @Delete('posts/:idPost')
-  async deletePost(@Param('idPost') idPost: string): Promise<string> {
-    return await this.adminService.deletePost(idPost);
+  @Delete('posts/delete/:idPost')
+  async deletePost(
+    @Param('idPost') idPost: string,
+  ): Promise<ResponseInterface> {
+    return {
+      status: 200,
+      metadata: await this.adminService.deletePost(idPost),
+    };
   }
 
-  // endregion
+  // #endregion
 }

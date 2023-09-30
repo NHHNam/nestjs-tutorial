@@ -20,6 +20,7 @@ import { PostCreateDTO, PostDTO } from './post.dto';
 import { PostService } from './post.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { saveFile } from '../utils/file';
+import { ResponseInterface } from 'src/cores/response.interface';
 
 @ApiTags('posts')
 // @ApiBearerAuth()
@@ -28,7 +29,7 @@ export class PostController {
   constructor(@Inject(PostService) private postService: PostService) {}
 
   @Get()
-  async findAll(): Promise<any> {
+  async findAll(): Promise<ResponseInterface> {
     return {
       status: 200,
       metadata: await this.postService.findAll(),
@@ -46,9 +47,8 @@ export class PostController {
   async create(
     @Param('idUser') idUser: string,
     @Body() data: PostCreateDTO,
-    @UploadedFile() file,
-  ): Promise<any> {
-    console.log(file);
+    @UploadedFile() file: any,
+  ): Promise<ResponseInterface> {
     const fileName = `${Date.now()}-${file.originalname}`;
     const filePath = `${fileName}`;
     const type = file.mimetype.split('/')[1];
