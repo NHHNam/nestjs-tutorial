@@ -25,7 +25,7 @@ describe('UserController', () => {
           entities: [UserEntity, PostEntity],
           // synchronize: true,
         }),
-        TypeOrmModule.forFeature([UserEntity]),
+        TypeOrmModule.forFeature([UserEntity, PostEntity]),
         PostModule,
       ],
       providers: [UserService],

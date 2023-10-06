@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
   Get,
   Inject,
   Injectable,
@@ -60,7 +61,7 @@ export class PostController {
       type !== 'avif' &&
       type !== 'webp'
     ) {
-      throw new Error('File type not supported');
+      throw new ForbiddenException('File type not supported');
     }
 
     saveFile(file.path, filePath);

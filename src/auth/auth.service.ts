@@ -1,3 +1,4 @@
+import { getInfoData } from 'src/utils';
 import { BadGatewayException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -19,6 +20,7 @@ export class AuthService {
   async login(data: UserDTO): Promise<any> {
     const user: UserEntity = await this.userRepository.findOne({
       where: { email: data.email },
+      relations: ['payment', 'posts'],
     });
 
     if (!user)
@@ -32,7 +34,19 @@ export class AuthService {
     const payload = { idUser: user.id, email: user.email };
 
     return {
-      user,
+      user: getInfoData({
+        fields: [
+          'id',
+          'email',
+          'role',
+          'isActive',
+          'payment.id',
+          'posts',
+          'createdAt',
+          'updatedAt',
+        ],
+        data: user,
+      }),
       access_token: await this.jwtService.signAsync(payload),
     };
   }

@@ -3,6 +3,7 @@ import { Expose } from 'class-transformer';
 import { IBaseDTO } from '../common/base.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { PostEntity } from 'src/post/post.model';
+import { PaymentEntity } from 'src/payment/payment.model';
 
 export class UserDTO extends IBaseDTO {
   @Expose()
@@ -21,6 +22,8 @@ export class UserDTO extends IBaseDTO {
 
   // @ApiProperty({ type: () => [PostEntity] })
   posts: PostEntity[];
+
+  payment: PaymentEntity;
 
   hashPassowrd: () => Promise<void>;
 }
