@@ -14,6 +14,7 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiConsumes,
+  ApiOperation,
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
@@ -29,7 +30,8 @@ import { ResponseInterface } from 'src/cores/response.interface';
 export class PostController {
   constructor(@Inject(PostService) private postService: PostService) {}
 
-  @Get()
+  @Post()
+  @ApiOperation({ summary: 'Get all posts' })
   async findAll(): Promise<ResponseInterface> {
     return {
       status: 200,
@@ -42,6 +44,7 @@ export class PostController {
     name: 'idUser',
     description: 'Id of user',
   })
+  @ApiOperation({ summary: 'Create new post' })
   @ApiConsumes('multipart/form-data') // Specify that the endpoint consumes form data
   @ApiBody({ type: PostCreateDTO })
   @UseInterceptors(FileInterceptor('photo'))

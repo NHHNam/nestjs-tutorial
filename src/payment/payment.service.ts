@@ -21,7 +21,6 @@ export class PaymentService implements IBaseService {
   async findAll(page = 1, total = 10): Promise<PaymentDTO[]> {
     const skip = page - 1;
     const take = page * total;
-    console.log(skip, take);
     return await this.paymentRepository.find({
       relations: ['users'],
       skip: skip,
