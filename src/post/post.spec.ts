@@ -21,7 +21,7 @@ describe('PostService', () => {
           entities: [UserEntity, PostEntity],
           // synchronize: true,
         }),
-        TypeOrmModule.forFeature([PostEntity]),
+        TypeOrmModule.forFeature([PostEntity, UserEntity]),
         UserModule,
       ],
       providers: [PostService],

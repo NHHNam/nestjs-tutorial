@@ -10,6 +10,8 @@ import { PostEntity } from './post/post.model';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AdminModule } from './admin/admin.module';
+import { PaymentModule } from './payment/payment.module';
+import { PaymentEntity } from './payment/payment.model';
 
 @Module({
   imports: [
@@ -20,7 +22,7 @@ import { AdminModule } from './admin/admin.module';
       username: 'root',
       password: 'root',
       database: 'testing',
-      entities: [UserEntity, PostEntity],
+      entities: [UserEntity, PostEntity, PaymentEntity],
       synchronize: true,
       poolSize: 10,
     }),
@@ -31,6 +33,7 @@ import { AdminModule } from './admin/admin.module';
     AuthModule,
     PostModule,
     AdminModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

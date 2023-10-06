@@ -1,4 +1,9 @@
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
 import { IBaseService } from '../common/base.service';
 import { PostDTO } from './post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -24,7 +29,7 @@ export class PostService implements IBaseService {
   }
   async create(data: any): Promise<any> {
     const user = await this.userService.findOne(data.idUser);
-    if (!user) throw new Error('User not found');
+    if (!user) throw new ForbiddenException('User not found');
 
     const post = new PostEntity();
     post.title = data.data.title;
@@ -37,7 +42,7 @@ export class PostService implements IBaseService {
   }
   async update(id: any, data: any): Promise<string> {
     const post = await this.postRepository.findOne({ where: { id: id } });
-    if (!post) throw new Error('Post not found');
+    if (!post) throw new ForbiddenException('Post not found');
     await this.postRepository.update(id, data);
     return 'Update post successfully';
   }

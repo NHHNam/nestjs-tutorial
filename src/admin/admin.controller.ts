@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Inject,
   Param,
@@ -11,36 +12,76 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
-import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
-import { PostCreateDTO } from 'src/post/post.dto';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import { PostCreateDTO, PostDTO } from 'src/post/post.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { saveFile } from 'src/utils/file';
 import { ResponseInterface } from 'src/cores/response.interface';
+import { Auth } from 'src/auth/auth.decorator';
+import { Role } from 'src/enums/role.enum';
+import { getInfoData, getInfoDataForArray } from 'src/utils';
 
 @ApiTags('admin')
+@ApiBearerAuth()
 @Controller('admin')
+@Auth(Role.Admin)
 export class AdminController {
   constructor(@Inject(AdminService) private adminService: AdminService) {}
 
   // #region Post
 
-  @Get('posts/:idPost')
+  @Post('posts/:idPost')
   @ApiParam({
     name: 'idPost',
     description: 'Id of post',
   })
+  @ApiOperation({
+    summary: 'Get post by id',
+  })
   async getPost(@Param('idPost') idPost: string): Promise<ResponseInterface> {
     return {
       status: 200,
-      metadata: await this.adminService.getPostById(idPost),
+      metadata: getInfoData({
+        fields: [
+          'id',
+          'title',
+          'description',
+          'photo',
+          'user.email',
+          'createdAt',
+          'updatedAt',
+        ],
+        data: await this.adminService.getPostById(idPost),
+      }),
     };
   }
 
-  @Get('posts')
+  @Post('posts')
+  @ApiOperation({
+    summary: 'Get all posts',
+  })
   async getAllPosts(): Promise<ResponseInterface> {
     return {
       status: 200,
-      metadata: await this.adminService.getAllPosts(),
+      metadata: getInfoDataForArray({
+        fields: [
+          'id',
+          'title',
+          'description',
+          'photo',
+          'user.email',
+          'createdAt',
+          'updatedAt',
+        ],
+        data: await this.adminService.getAllPosts(),
+      }),
     };
   }
 
@@ -48,6 +89,9 @@ export class AdminController {
   @ApiParam({
     name: 'idUser',
     description: 'Id of user',
+  })
+  @ApiOperation({
+    summary: 'Create post',
   })
   @ApiConsumes('multipart/form-data') // Specify that the endpoint consumes form data
   @ApiBody({ type: PostCreateDTO })
@@ -68,7 +112,7 @@ export class AdminController {
       type !== 'avif' &&
       type !== 'webp'
     ) {
-      throw new Error('File type not supported');
+      throw new ForbiddenException('File type not supported');
     }
 
     saveFile(file.path, filePath);
@@ -90,6 +134,9 @@ export class AdminController {
     name: 'idPost',
     description: 'Id of post',
   })
+  @ApiOperation({
+    summary: 'Update post by id',
+  })
   @ApiConsumes('multipart/form-data') // Specify that the endpoint consumes form data
   @ApiBody({ type: PostCreateDTO })
   @UseInterceptors(FileInterceptor('photo'))
@@ -110,7 +157,7 @@ export class AdminController {
         type !== 'avif' &&
         type !== 'webp'
       ) {
-        throw new Error('File type not supported');
+        throw new ForbiddenException('File type not supported');
       }
 
       saveFile(file.path, filePath);
@@ -133,6 +180,9 @@ export class AdminController {
     name: 'idPost',
     description: 'Id of post',
   })
+  @ApiOperation({
+    summary: 'Delete post by id',
+  })
   @Delete('posts/delete/:idPost')
   async deletePost(
     @Param('idPost') idPost: string,
@@ -147,27 +197,42 @@ export class AdminController {
 
   // #region User
 
-  @Get('users/:idUser')
+  @Post('users/:idUser')
   @ApiParam({
     name: 'idUser',
     description: 'Id of user',
   })
+  @ApiOperation({
+    summary: 'Get user by id',
+  })
   async getUser(@Param('idUser') idUser: string): Promise<ResponseInterface> {
     return {
       status: 200,
-      metadata: await this.adminService.getUserById(idUser),
+      metadata: getInfoData({
+        fields: ['id', 'email', 'role', 'createdAt', 'updatedAt'],
+        data: await this.adminService.getUserById(idUser),
+      }),
     };
   }
 
-  @Get('users')
+  @Post('users')
+  @ApiOperation({
+    summary: 'Get all users',
+  })
   async getAllUsers(): Promise<ResponseInterface> {
     return {
       status: 200,
-      metadata: await this.adminService.getAllUsers(),
+      metadata: getInfoDataForArray({
+        fields: ['id', 'email', 'role', 'createdAt', 'updatedAt'],
+        data: await this.adminService.getAllUsers(),
+      }),
     };
   }
 
   @Post('users/create')
+  @ApiOperation({
+    summary: 'Create user',
+  })
   @ApiBody({ type: PostCreateDTO })
   async createUser(@Body() data: PostCreateDTO): Promise<ResponseInterface> {
     return {
@@ -180,6 +245,9 @@ export class AdminController {
   @ApiParam({
     name: 'idUser',
     description: 'Id of user',
+  })
+  @ApiOperation({
+    summary: 'Update user by id',
   })
   @ApiBody({ type: PostCreateDTO })
   async updateUser(
@@ -196,6 +264,9 @@ export class AdminController {
   @ApiParam({
     name: 'idUser',
     description: 'Id of user',
+  })
+  @ApiOperation({
+    summary: 'Delete user by id',
   })
   async deleteUser(
     @Param('idUser') idUser: string,

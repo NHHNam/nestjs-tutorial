@@ -1,8 +1,9 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
+import { BeforeInsert, Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
 import { BaseEntity } from '../common/base.entity';
 import { PostEntity } from '../post/post.model';
+import { PaymentEntity } from 'src/payment/payment.model';
 
 @Entity({ name: 'user' })
 export class UserEntity extends BaseEntity {
@@ -20,6 +21,9 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => PostEntity, (post) => post.user, { nullable: true })
   posts: PostEntity[];
+
+  @ManyToOne(() => PaymentEntity, (payment) => payment.users)
+  payment: PaymentEntity;
 
   @BeforeInsert()
   public async hashPassowrd(): Promise<void> {

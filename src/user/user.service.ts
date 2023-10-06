@@ -1,4 +1,9 @@
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
 import { IBaseService } from '../common/base.service';
 import { UserDTO } from './user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -47,7 +52,7 @@ export class UserService implements IBaseService {
 
   async getPotsByUserId(idUser: string): Promise<Array<PostDTO>> {
     const user = await this.findOne(idUser);
-    if (!user) throw new Error('User not found');
+    if (!user) throw new ForbiddenException('User not found');
 
     return await this.postService.findAllByUserId(idUser);
   }

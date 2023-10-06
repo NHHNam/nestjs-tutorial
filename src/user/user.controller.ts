@@ -12,9 +12,9 @@ import { UserDTO } from './user.dto';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
 import { RolesGuard } from 'src/auth/role/roles.guard';
-import { Auth } from 'src/auth/auth.decorator';
-import { Role } from 'src/enums/role.enum';
-import { ResponseInterface } from 'src/cores/response.interface';
+import { Auth } from '../auth/auth.decorator';
+import { Role } from '../enums/role.enum';
+import { ResponseInterface } from '../cores/response.interface';
 
 @ApiTags('users')
 @ApiBearerAuth()

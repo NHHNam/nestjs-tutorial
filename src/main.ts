@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
+import { HttpExceptionFilter } from './cores/httpException';
 
 async function bootstrap(port: number) {
   const app = await NestFactory.create(AppModule);
@@ -21,12 +22,14 @@ async function bootstrap(port: number) {
     .addTag('users')
     .addTag('auth')
     .addTag('posts')
+    .addTag('payments')
     .addTag('admin')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   await app.listen(port, '0.0.0.0', () => {
     console.log(`Server is running on port ${port}`);
