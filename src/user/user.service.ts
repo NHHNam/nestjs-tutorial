@@ -20,8 +20,12 @@ export class UserService implements IBaseService {
     private readonly userRepository: Repository<UserEntity>,
     @Inject(forwardRef(() => PostService)) private postService: PostService,
   ) {}
-  async findAll(): Promise<Array<UserDTO>> {
-    return await this.userRepository.find();
+  async findAll(page = 1, show = 10): Promise<Array<UserDTO>> {
+    return await this.userRepository.find({
+      relations: ['posts', 'bills', 'payment'],
+      skip: (page - 1) * show,
+      take: show,
+    });
   }
   async findOne(id: any): Promise<UserDTO> {
     return await this.userRepository.findOne({ where: { id: id } });

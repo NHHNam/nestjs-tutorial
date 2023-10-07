@@ -20,7 +20,7 @@ export class AuthService {
   async login(data: UserDTO): Promise<any> {
     const user: UserEntity = await this.userRepository.findOne({
       where: { email: data.email },
-      relations: ['payment', 'posts'],
+      relations: ['payment', 'posts', 'bills'],
     });
 
     if (!user)
@@ -42,6 +42,7 @@ export class AuthService {
           'isActive',
           'payment.id',
           'posts',
+          'bills',
           'createdAt',
           'updatedAt',
         ],
