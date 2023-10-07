@@ -25,7 +25,7 @@ import { saveFile } from '../utils/file';
 import { ResponseInterface } from 'src/cores/response.interface';
 
 @ApiTags('posts')
-// @ApiBearerAuth()
+@ApiBearerAuth()
 @Controller('posts')
 export class PostController {
   constructor(@Inject(PostService) private postService: PostService) {}

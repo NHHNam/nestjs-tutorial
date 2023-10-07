@@ -4,10 +4,12 @@ import {
   Delete,
   ForbiddenException,
   Get,
+  HttpCode,
   Inject,
   Param,
   Post,
   Put,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -18,6 +20,7 @@ import {
   ApiConsumes,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { PostCreateDTO, PostDTO } from 'src/post/post.dto';
@@ -67,9 +70,16 @@ export class AdminController {
   @ApiOperation({
     summary: 'Get all posts',
   })
-  async getAllPosts(): Promise<ResponseInterface> {
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'total', type: Number, required: false })
+  async getAllPosts(
+    @Query('page') page: number,
+    @Query('total') total: number,
+  ): Promise<any> {
     return {
       status: 200,
+      page: page ? page : 1,
+      show: total ? total : 10,
       metadata: getInfoDataForArray({
         fields: [
           'id',
@@ -80,7 +90,7 @@ export class AdminController {
           'createdAt',
           'updatedAt',
         ],
-        data: await this.adminService.getAllPosts(),
+        data: await this.adminService.getAllPosts(page, total),
       }),
     };
   }
@@ -219,12 +229,29 @@ export class AdminController {
   @ApiOperation({
     summary: 'Get all users',
   })
-  async getAllUsers(): Promise<ResponseInterface> {
+  @HttpCode(200)
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'total', type: Number, required: false })
+  async getAllUsers(
+    @Query('page') page: number,
+    @Query('total') total: number,
+  ): Promise<any> {
     return {
       status: 200,
+      page: page ? page : 1,
+      show: total ? total : 10,
       metadata: getInfoDataForArray({
-        fields: ['id', 'email', 'role', 'createdAt', 'updatedAt'],
-        data: await this.adminService.getAllUsers(),
+        fields: [
+          'id',
+          'email',
+          'role',
+          'createdAt',
+          'updatedAt',
+          'payment',
+          'bills',
+          'posts',
+        ],
+        data: await this.adminService.getAllUsers(page, total),
       }),
     };
   }
@@ -274,6 +301,39 @@ export class AdminController {
     return {
       status: 200,
       metadata: await this.adminService.deleteUser(idUser),
+    };
+  }
+
+  // #endregion
+
+  // #region Bill
+
+  @Post('bills')
+  @ApiOperation({
+    summary: 'Get all bills',
+  })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'total', type: Number, required: false })
+  async getAllBills(
+    @Query('page') page: number,
+    @Query('total') total: number,
+  ): Promise<any> {
+    return {
+      status: 200,
+      page: page ? page : 1,
+      show: total ? total : 10,
+      metadata: getInfoDataForArray({
+        fields: [
+          'id',
+          'typeBill',
+          'quantity',
+          'status',
+          'createdAt',
+          'user.id',
+          'user.email',
+        ],
+        data: await this.adminService.getAllBills(page, total),
+      }),
     };
   }
 

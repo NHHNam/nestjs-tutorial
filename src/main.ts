@@ -23,6 +23,7 @@ async function bootstrap(port: number) {
     .addTag('auth')
     .addTag('posts')
     .addTag('payments')
+    .addTag('bills')
     .addTag('admin')
     .build();
   const document = SwaggerModule.createDocument(app, config);

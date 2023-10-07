@@ -12,6 +12,8 @@ import { join } from 'path';
 import { AdminModule } from './admin/admin.module';
 import { PaymentModule } from './payment/payment.module';
 import { PaymentEntity } from './payment/payment.model';
+import { BillEntity } from './bill/bill.model';
+import { BillModule } from './bill/bill.module';
 
 @Module({
   imports: [
@@ -22,7 +24,7 @@ import { PaymentEntity } from './payment/payment.model';
       username: 'root',
       password: 'root',
       database: 'testing',
-      entities: [UserEntity, PostEntity, PaymentEntity],
+      entities: [UserEntity, PostEntity, PaymentEntity, BillEntity],
       synchronize: true,
       poolSize: 10,
     }),
@@ -34,6 +36,7 @@ import { PaymentEntity } from './payment/payment.model';
     PostModule,
     AdminModule,
     PaymentModule,
+    BillModule,
   ],
   controllers: [AppController],
   providers: [AppService],
