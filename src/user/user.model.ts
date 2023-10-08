@@ -17,6 +17,9 @@ export class UserEntity extends BaseEntity {
   @Column({ type: 'enum', enum: ['admin', 'user'], default: 'user' })
   role: string;
 
+  @Column({ type: 'double', default: 0 })
+  point: number;
+
   @Column({ default: true })
   isActive: boolean;
 

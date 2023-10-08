@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Param, Post } from '@nestjs/common';
+import { Body, Controller, Inject, Param, Post, Put } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -57,6 +57,22 @@ export class BillController {
     return {
       status: 201,
       metadata: await this.billService.create({ idUser, data }),
+    };
+  }
+
+  @Put(':idBill')
+  @ApiParam({
+    name: 'idBill',
+    description: 'Id of bill',
+  })
+  @ApiOperation({ summary: 'Handle bill' })
+  async handleBill(
+    @Param('idBill') idBill: string,
+    @Body() data: any,
+  ): Promise<ResponseInterface> {
+    return {
+      status: 200,
+      metadata: await this.billService.handleBill(idBill, data),
     };
   }
 }

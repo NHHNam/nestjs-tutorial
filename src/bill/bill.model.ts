@@ -16,7 +16,7 @@ export class BillEntity extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: ['pending', 'approved', 'rejected', 'cancelled'],
+    enum: ['pending', 'completed', 'cancelled'],
     default: 'pending',
   })
   status: string;
