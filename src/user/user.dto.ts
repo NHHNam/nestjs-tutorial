@@ -19,6 +19,8 @@ export class UserDTO extends IBaseDTO {
 
   role: string;
 
+  point: number;
+
   isActive: boolean;
 
   // @ApiProperty({ type: () => [PostEntity] })

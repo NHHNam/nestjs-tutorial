@@ -2,9 +2,10 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from 'src/user/user.service';
 import { BillEntity } from './bill.model';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { IBaseService } from 'src/common/base.service';
 import { BillCreateDTO, BillDTO } from './bill.dto';
+import { Status } from 'src/enums/bill.enum';
 
 @Injectable()
 export class BillService implements IBaseService {
@@ -12,6 +13,7 @@ export class BillService implements IBaseService {
     @Inject(UserService) private readonly userService: UserService,
     @InjectRepository(BillEntity)
     private readonly billRepository: Repository<BillEntity>,
+    private dataSource: DataSource,
   ) {}
   async findAll(page = 1, show = 10): Promise<BillDTO[]> {
     return await this.billRepository.find({
@@ -54,4 +56,90 @@ export class BillService implements IBaseService {
     await this.billRepository.delete(id);
     return 'Delete bill successfully';
   }
+
+  // #region service
+
+  async handleBill(idBill: string, status = Status.Completed): Promise<string> {
+    const bill: BillDTO = await this.billRepository.findOne({
+      where: { id: idBill },
+    });
+    if (!bill) throw new BadRequestException('Bill not found');
+
+    if (bill.typeBill === 'topup')
+      return await this.handleBillTopUp(idBill, status);
+  }
+
+  async handleBillTopUp(
+    idBill: string,
+    status = Status.Completed,
+  ): Promise<string> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const bill: BillDTO = await this.billRepository.findOne({
+        where: { id: idBill },
+      });
+      if (!bill) throw new BadRequestException('Bill not found');
+
+      if (bill.typeBill !== 'topup')
+        throw new BadRequestException('Bill is not top up');
+
+      const user = await this.userService.findOne(bill.user.id);
+      if (!user) throw new BadRequestException('User not found');
+
+      if (status === Status.Completed) {
+        if (bill.status !== Status.Pending) {
+          throw new BadRequestException('Bill is not pending');
+        }
+        user.point += bill.quantity;
+
+        await this.userService.update(user.id, user);
+
+        bill.status = Status.Completed;
+
+        await this.billRepository.update(bill.id, bill);
+
+        await queryRunner.commitTransaction();
+        return 'Top up successfully';
+      } else if (status === Status.Cancelled) {
+        if (bill.status === Status.Completed) {
+          const calculatePoint = user.point - bill.quantity;
+          if (calculatePoint < 0)
+            throw new BadRequestException('Not enough point');
+
+          user.point = calculatePoint;
+
+          await this.userService.update(user.id, user);
+
+          bill.status = Status.Cancelled;
+
+          await this.billRepository.update(bill.id, bill);
+          return 'Reject successfully';
+        } else if (bill.status === Status.Pending) {
+          bill.status = Status.Cancelled;
+
+          await this.billRepository.update(bill.id, bill);
+          return 'Reject successfully';
+        }
+      } else {
+        if (bill.status === Status.Cancelled) {
+          bill.status = Status.Pending;
+
+          await this.billRepository.update(bill.id, bill);
+          return 'Revert successfully';
+        } else {
+          throw new BadRequestException(`${status} is not valid`);
+        }
+      }
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+      throw new BadRequestException(err.message);
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  // #endregion
 }

@@ -33,7 +33,7 @@ export class BillCreateDTO extends IBaseDTO {
 
   @Expose()
   @ApiProperty({
-    enum: ['pending', 'approved', 'rejected', 'cancelled'],
+    enum: ['pending', 'completed', 'rejected', 'cancelled'],
     default: 'pending',
   })
   status: string;
