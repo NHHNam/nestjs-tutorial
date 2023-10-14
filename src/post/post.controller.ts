@@ -3,6 +3,7 @@ import {
   Controller,
   ForbiddenException,
   Get,
+  HttpCode,
   Inject,
   Injectable,
   Param,
@@ -32,6 +33,7 @@ export class PostController {
 
   @Post()
   @ApiOperation({ summary: 'Get all posts' })
+  @HttpCode(200)
   async findAll(): Promise<ResponseInterface> {
     return {
       status: 200,
@@ -40,6 +42,7 @@ export class PostController {
   }
 
   @Post(':idUser')
+  @HttpCode(202)
   @ApiParam({
     name: 'idUser',
     description: 'Id of user',

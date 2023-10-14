@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Inject,
   Param,
   Post,
@@ -32,6 +33,7 @@ export class PaymentController {
   ) {}
 
   @Post()
+  @HttpCode(200)
   @ApiOperation({ summary: 'Get all payments' })
   @ApiQuery({ name: 'page', type: Number, required: false })
   @ApiQuery({ name: 'total', type: Number, required: false })
@@ -56,6 +58,7 @@ export class PaymentController {
   }
 
   @Post('create')
+  @HttpCode(201)
   @ApiOperation({ summary: 'Create new payment' })
   @ApiBody({ type: PaymentCreateDTO })
   async create(@Body() data: PaymentCreateDTO): Promise<ResponseInterface> {
@@ -66,6 +69,7 @@ export class PaymentController {
   }
 
   @Post('create/:idUser')
+  @HttpCode(201)
   @ApiParam({
     name: 'idUser',
     description: 'Id of user',

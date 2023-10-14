@@ -35,12 +35,32 @@ describe('UserService', () => {
   describe('findAll', () => {
     it('should return an array of users', async () => {
       // Mock the find method of the repository to return a sample array of users
-
-      // jest.spyOn(userService, 'findAll').mockResolvedValue(mockPayments);
       jest.spyOn(userService, 'findAll').mockResolvedValue(mockPayments);
       const result = await userService.findAll(1, 20);
 
       expect(result).toEqual(mockPayments);
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return a user by id', async () => {
+      const user = new UserDTO();
+
+      jest.spyOn(userService, 'findOne').mockResolvedValue(user);
+      const result = await userService.findOne(1);
+
+      expect(result).toEqual(user);
+    });
+  });
+
+  describe('create', () => {
+    it('should create a user', async () => {
+      const user = new UserDTO();
+
+      jest.spyOn(userService, 'create').mockResolvedValue(user);
+      const result = await userService.create(user);
+
+      expect(result).toEqual(user);
     });
   });
 });

@@ -19,8 +19,10 @@ import { BillModule } from './bill/bill.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3309,
+      // host: 'localhost', // for run local
+      host: 'mysql', // for run docker compose
+      // port: 3309, // for run local
+      port: 3306, // for run docker compose
       username: 'root',
       password: 'root',
       database: 'testing',
