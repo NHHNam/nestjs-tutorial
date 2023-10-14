@@ -1,8 +1,8 @@
 import {
   ForbiddenException,
+  forwardRef,
   Inject,
   Injectable,
-  forwardRef,
 } from '@nestjs/common';
 import { IBaseService } from '../common/base.service';
 import { UserDTO } from './user.dto';
@@ -20,6 +20,7 @@ export class UserService implements IBaseService {
     private readonly userRepository: Repository<UserEntity>,
     @Inject(forwardRef(() => PostService)) private postService: PostService,
   ) {}
+
   async findAll(page = 1, show = 10): Promise<Array<UserDTO>> {
     return await this.userRepository.find({
       relations: ['posts', 'bills', 'payment'],
@@ -27,13 +28,16 @@ export class UserService implements IBaseService {
       take: show,
     });
   }
+
   async findOne(id: any): Promise<UserDTO> {
     return await this.userRepository.findOne({ where: { id: id } });
   }
-  async create(data: UserDTO): Promise<any> {
+
+  async create(data: UserDTO): Promise<UserDTO> {
     const user = this.userRepository.create(data);
     return await this.userRepository.save(user);
   }
+
   async update(id: any, data: any): Promise<string> {
     if (data.password) {
       data = {
@@ -45,6 +49,7 @@ export class UserService implements IBaseService {
     await this.userRepository.update(id, data);
     return 'Udpate user successfully';
   }
+
   async delete(id: any): Promise<string> {
     await this.userRepository.delete(id); // maybe softDelete
     return 'Delete user successfully';

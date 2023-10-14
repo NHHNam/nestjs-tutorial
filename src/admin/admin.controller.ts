@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   ForbiddenException,
-  Get,
   HttpCode,
   Inject,
   Param,
@@ -23,13 +22,13 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { PostCreateDTO, PostDTO } from 'src/post/post.dto';
+import { PostCreateDTO } from '../post/post.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { saveFile } from 'src/utils/file';
-import { ResponseInterface } from 'src/cores/response.interface';
-import { Auth } from 'src/auth/auth.decorator';
-import { Role } from 'src/enums/role.enum';
-import { getInfoData, getInfoDataForArray } from 'src/utils';
+import { saveFile } from '../utils/file';
+import { ResponseInterface } from '../cores/response.interface';
+import { getInfoData, getInfoDataForArray } from '../utils';
+import { Auth } from '../auth/auth.decorator';
+import { Role } from '../enums/role.enum';
 
 @ApiTags('admin')
 @ApiBearerAuth()

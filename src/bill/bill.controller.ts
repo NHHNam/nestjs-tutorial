@@ -8,9 +8,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { BillService } from './bill.service';
-import { ResponseInterface } from 'src/cores/response.interface';
+import { ResponseInterface } from '../cores/response.interface';
 import { BillCreateDTO, BillDTO } from './bill.dto';
-import { getInfoDataForArray } from 'src/utils';
+import { getInfoDataForArray } from '../utils';
 
 @ApiTags('bills')
 @ApiBearerAuth()

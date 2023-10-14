@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { BillCreateDTO, BillDTO } from 'src/bill/bill.dto';
-import { BillService } from 'src/bill/bill.service';
-import { PostDTO } from 'src/post/post.dto';
-import { PostService } from 'src/post/post.service';
-import { UserDTO } from 'src/user/user.dto';
-import { UserService } from 'src/user/user.service';
+import { BillCreateDTO, BillDTO } from '../bill/bill.dto';
+import { BillService } from '../bill/bill.service';
+import { PostDTO } from '../post/post.dto';
+import { PostService } from '../post/post.service';
+import { UserDTO } from '../user/user.dto';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AdminService {

@@ -17,10 +17,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { PaymentService } from './payment.service';
-import { ResponseInterface } from 'src/cores/response.interface';
+import { ResponseInterface } from '../cores/response.interface';
 import { PaymentCreateDTO, PaymentDTO } from './payment.dto';
-import { getInfoDataForArray } from 'src/utils';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { getInfoDataForArray } from '../utils';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('payments')
 @ApiBearerAuth()

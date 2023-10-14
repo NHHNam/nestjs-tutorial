@@ -1,11 +1,11 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 import { BillEntity } from './bill.model';
 import { DataSource, Repository } from 'typeorm';
-import { IBaseService } from 'src/common/base.service';
+import { IBaseService } from '../common/base.service';
 import { BillCreateDTO, BillDTO } from './bill.dto';
-import { Status } from 'src/enums/bill.enum';
+import { Status } from '../enums/bill.enum';
 
 @Injectable()
 export class BillService implements IBaseService {

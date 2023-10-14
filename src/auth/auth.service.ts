@@ -1,4 +1,4 @@
-import { getInfoData } from 'src/utils';
+import { getInfoData } from '../utils';
 import { BadGatewayException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../common/base.entity';
-import { UserEntity } from 'src/user/user.model';
+import { UserEntity } from '../user/user.model';
 
 @Entity({ name: 'bills' })
 export class BillEntity extends BaseEntity {
