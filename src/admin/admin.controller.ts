@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   ForbiddenException,
-  Get,
   HttpCode,
   Inject,
   Param,
@@ -23,13 +22,13 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { PostCreateDTO, PostDTO } from 'src/post/post.dto';
+import { PostCreateDTO } from '../post/post.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { saveFile } from 'src/utils/file';
-import { ResponseInterface } from 'src/cores/response.interface';
-import { Auth } from 'src/auth/auth.decorator';
-import { Role } from 'src/enums/role.enum';
-import { getInfoData, getInfoDataForArray } from 'src/utils';
+import { saveFile } from '../utils/file';
+import { ResponseInterface } from '../cores/response.interface';
+import { getInfoData, getInfoDataForArray } from '../utils';
+import { Auth } from '../auth/auth.decorator';
+import { Role } from '../enums/role.enum';
 
 @ApiTags('admin')
 @ApiBearerAuth()
@@ -41,6 +40,7 @@ export class AdminController {
   // #region Post
 
   @Post('posts/:idPost')
+  @HttpCode(200)
   @ApiParam({
     name: 'idPost',
     description: 'Id of post',
@@ -67,6 +67,7 @@ export class AdminController {
   }
 
   @Post('posts')
+  @HttpCode(200)
   @ApiOperation({
     summary: 'Get all posts',
   })
@@ -96,6 +97,7 @@ export class AdminController {
   }
 
   @Post('posts/create/:idUser')
+  @HttpCode(201)
   @ApiParam({
     name: 'idUser',
     description: 'Id of user',
@@ -140,6 +142,7 @@ export class AdminController {
   }
 
   @Put('posts/update/:idPost')
+  @HttpCode(204)
   @ApiParam({
     name: 'idPost',
     description: 'Id of post',
@@ -190,6 +193,7 @@ export class AdminController {
     name: 'idPost',
     description: 'Id of post',
   })
+  @HttpCode(204)
   @ApiOperation({
     summary: 'Delete post by id',
   })
@@ -208,6 +212,7 @@ export class AdminController {
   // #region User
 
   @Post('users/:idUser')
+  @HttpCode(200)
   @ApiParam({
     name: 'idUser',
     description: 'Id of user',
@@ -257,6 +262,7 @@ export class AdminController {
   }
 
   @Post('users/create')
+  @HttpCode(201)
   @ApiOperation({
     summary: 'Create user',
   })
@@ -269,6 +275,7 @@ export class AdminController {
   }
 
   @Put('users/update/:idUser')
+  @HttpCode(204)
   @ApiParam({
     name: 'idUser',
     description: 'Id of user',
@@ -288,6 +295,7 @@ export class AdminController {
   }
 
   @Delete('users/delete/:idUser')
+  @HttpCode(204)
   @ApiParam({
     name: 'idUser',
     description: 'Id of user',
@@ -309,6 +317,7 @@ export class AdminController {
   // #region Bill
 
   @Post('bills')
+  @HttpCode(200)
   @ApiOperation({
     summary: 'Get all bills',
   })

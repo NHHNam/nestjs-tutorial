@@ -1,11 +1,11 @@
 import { ForbiddenException, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IBaseService } from 'src/common/base.service';
-import { UserService } from 'src/user/user.service';
+import { IBaseService } from '../common/base.service';
+import { UserService } from '../user/user.service';
 import { PaymentEntity } from './payment.model';
 import { Repository } from 'typeorm';
 import { PaymentCreateDTO, PaymentDTO } from './payment.dto';
-import { UserEntity } from 'src/user/user.model';
+import { UserEntity } from '../user/user.model';
 import { skip } from 'node:test';
 import { take } from 'lodash';
 

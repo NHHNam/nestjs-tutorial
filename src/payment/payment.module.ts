@@ -5,7 +5,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { PaymentEntity } from './payment.model';
 import { PaymentController } from './payment.controller';
 import { PaymentService } from './payment.service';
-import { UserEntity } from 'src/user/user.model';
+import { UserEntity } from '../user/user.model';
 
 @Module({
   imports: [

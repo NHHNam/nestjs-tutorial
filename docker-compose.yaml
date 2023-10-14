@@ -11,3 +11,20 @@ services:
       MYSQL_PASSWORD: nam123
     volumes:
       - ./data/mysql:/var/lib/mysql # chỏ dữ liệu trong docker qua thư mục ngoài data/mysql là thư mục trên local
+    networks:
+      - shop
+  apis:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 4000:4000
+    depends_on:
+      - mysql
+    networks:
+      - shop
+
+networks:
+  shop:
+    driver: bridge

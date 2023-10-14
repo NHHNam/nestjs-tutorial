@@ -3,8 +3,8 @@ import { BeforeInsert, Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { BaseEntity } from '../common/base.entity';
 import { PostEntity } from '../post/post.model';
-import { PaymentEntity } from 'src/payment/payment.model';
-import { BillEntity } from 'src/bill/bill.model';
+import { PaymentEntity } from '../payment/payment.model';
+import { BillEntity } from '../bill/bill.model';
 
 @Entity({ name: 'user' })
 export class UserEntity extends BaseEntity {

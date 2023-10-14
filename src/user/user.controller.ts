@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Inject,
   Param,
   Post,
@@ -29,6 +30,7 @@ export class UserController {
   constructor(@Inject(UserService) private userSerice: UserService) {}
   @Post('posts/:id')
   @ApiOperation({ summary: 'Get posts by user id' })
+  @HttpCode(200)
   async getPostsByUserId(@Param('id') id: string): Promise<ResponseInterface> {
     return {
       status: 200,

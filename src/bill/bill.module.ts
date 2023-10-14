@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BillEntity } from './bill.model';
 import { BillController } from './bill.controller';
 import { BillService } from './bill.service';
-import { UserModule } from 'src/user/user.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([BillEntity]), UserModule],

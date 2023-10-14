@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Inject,
   Param,
   Post,
@@ -17,10 +18,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { PaymentService } from './payment.service';
-import { ResponseInterface } from 'src/cores/response.interface';
+import { ResponseInterface } from '../cores/response.interface';
 import { PaymentCreateDTO, PaymentDTO } from './payment.dto';
-import { getInfoDataForArray } from 'src/utils';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { getInfoDataForArray } from '../utils';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('payments')
 @ApiBearerAuth()
@@ -32,6 +33,7 @@ export class PaymentController {
   ) {}
 
   @Post()
+  @HttpCode(200)
   @ApiOperation({ summary: 'Get all payments' })
   @ApiQuery({ name: 'page', type: Number, required: false })
   @ApiQuery({ name: 'total', type: Number, required: false })
@@ -56,6 +58,7 @@ export class PaymentController {
   }
 
   @Post('create')
+  @HttpCode(201)
   @ApiOperation({ summary: 'Create new payment' })
   @ApiBody({ type: PaymentCreateDTO })
   async create(@Body() data: PaymentCreateDTO): Promise<ResponseInterface> {
@@ -66,6 +69,7 @@ export class PaymentController {
   }
 
   @Post('create/:idUser')
+  @HttpCode(201)
   @ApiParam({
     name: 'idUser',
     description: 'Id of user',
